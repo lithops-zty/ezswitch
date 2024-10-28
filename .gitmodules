@@ -1,0 +1,6 @@
+[submodule "alignment/mgiza"]
+	path = alignment/mgiza
+	url = https://github.com/moses-smt/mgiza.git
+[submodule "alignment/giza-py"]
+	path = alignment/giza-py
+	url = https://github.com/sillsdev/giza-py.git
