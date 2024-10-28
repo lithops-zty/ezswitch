@@ -1,6 +1,6 @@
 # EZSwitch
 
-EZSwitch
+EZswitch is a novel framework designed to generate code-switched text, blending two languages within a single sentence or discourse. This tool incorporates Equivalence Constraint Theory (ECT) with and large language models (LLMs) to produce syntactically valid, natural-sounding code-switched sentences. This is based on [the paper](https://arxiv.org/TODO)
 
 ## Install Requirements
 EZSwitch requires [Python 3.10](https://www.python.org/downloads/) or greater.
@@ -45,3 +45,7 @@ cmake -DBOOST_ROOT=<boost_dir>/build -DBoost_USE_STATIC_LIBS=ON -DCMAKE_INSTALL_
 make
 make install
 ```
+
+## Citations
+
+TODO
