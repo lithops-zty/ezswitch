@@ -60,8 +60,8 @@ class Translator:
 
 def main(args):
     translator = Translator(
-        source_language=args.src,
-        target_language=args.tgt,
+        source_language=args.src_lang,
+        target_language=args.tgt_lang,
     )
     
     print(f"reading input file {args.input}")
@@ -69,7 +69,7 @@ def main(args):
     with open(args.input) as f:
         raw_lines = [line.strip() for line in f.readlines()]
     
-    print(f"translating from {args.src} to {args.tgt}")
+    print(f"translating from {args.src_lang} to {args.tgt_lang}")
     translated_lines = translator.translate(raw_lines)
     
     print(f"writing output file {args.output}")
