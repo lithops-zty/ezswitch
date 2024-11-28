@@ -1,0 +1,5 @@
+CHANNEL	SPEAKER_ID	GENDER	AGE	REGION,CITY	DEVICE
+C0	G0001	F	18	Singapore,North east,Singapore	iPhone 11
+C0	G0002	F	18	Singapore,North,Singapore	iPhone 7
+C0	G0003	M	36	Singapore,North east,Singapore	iPhone XS Max
+C0	G0004	F	32	Singapore,South east,Singapore	iPhone 8

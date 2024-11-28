@@ -23,20 +23,25 @@ class Translator:
             'hi': 'Hindi',
             'ta': 'Tamil',
             'ml': 'Malayalam',
-            'id': 'Indonesian'
+            'id': 'Indonesian',
+            'zh': 'Chinese',
+            'sge': 'Singapore English',
         }
         self.EXAMPLEMAP = {
             'en': 'The reward of goodness shall be nothing but goodness',
             'hi': 'अच्छाई का पुरस्कार अच्छाई के अलावा कुछ नहीं होग',
             'ml': 'നന്മയുടെ പ്രതിഫലം നന്മയല്ലാതെ മറ്റൊന്നുമല്ലा',
             'ta': 'நன்மையின் வெகுமதி நன்மையைத் தவிர வேறில்லை',
-            'id': 'Pahala kebaikan tak lain hanyalah kebaikan'
+            'id': 'Pahala kebaikan tak lain hanyalah kebaikan',
+            'zh': '善的回报只能是善',
+            'sge': 'The reward for doing good is nothing but more good',
         }
         # self.timeout = timeout
         self.model = pipeline('text-generation', 
-            'meta-llama/Meta-Llama-3-8B-Instruct',
+            'meta-llama/Llama-3.2-1B-Instruct',
             model_kwargs={"torch_dtype": torch.bfloat16},
             device_map="auto",
+            max_length=1000,
         )
         
     def transform(self, list_of_sentences):
@@ -55,7 +60,10 @@ class Translator:
         output = self.model(chat_template)
         clean_output = []
         for i in range(len(output)):
-            clean_output.append(output[i][0]['generated_text'][len(list_of_sentences[i]):].split('\n')[0])
+            print(output[i][0]['generated_text'], list_of_sentences)
+            clean_output.append(
+                output[i][0]['generated_text'][-1]['content'].replace("\n", " ")
+            )#.split('\n')[0])
         return clean_output
 
 def main(args):

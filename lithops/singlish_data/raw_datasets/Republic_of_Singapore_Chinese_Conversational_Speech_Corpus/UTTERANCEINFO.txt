@@ -1,0 +1,25 @@
+CHANNEL	UTTRANS_ID	SPEAKER_ID	TOPIC
+C0	A0001_S001_0_G0001.wav	G0001	Study and Education
+C0	A0001_S001_0_G0002.wav	G0002	Study and Education
+C0	A0001_S002_0_G0001.wav	G0001	Entertainment
+C0	A0001_S002_0_G0002.wav	G0002	Entertainment
+C0	A0001_S003_0_G0001.wav	G0001	Health and Medical Treatment
+C0	A0001_S003_0_G0002.wav	G0002	Health and Medical Treatment
+C0	A0001_S004_0_G0001.wav	G0001	Consumption
+C0	A0001_S004_0_G0002.wav	G0002	Consumption
+C0	A0001_S005_0_G0001.wav	G0001	Personal Characteristics
+C0	A0001_S005_0_G0002.wav	G0002	Personal Characteristics
+C0	A0001_S006_0_G0001.wav	G0001	Career
+C0	A0001_S006_0_G0002.wav	G0002	Career
+C0	A0002_S001_0_G0003.wav	G0003	Entertainment
+C0	A0002_S001_0_G0004.wav	G0004	Entertainment
+C0	A0002_S002_0_G0003.wav	G0003	Consumption
+C0	A0002_S002_0_G0004.wav	G0004	Consumption
+C0	A0002_S003_0_G0003.wav	G0003	Study and Education
+C0	A0002_S003_0_G0004.wav	G0004	Study and Education
+C0	A0002_S004_0_G0003.wav	G0003	Personal Characteristics
+C0	A0002_S004_0_G0004.wav	G0004	Personal Characteristics
+C0	A0002_S005_0_G0003.wav	G0003	Health and Medical Treatment
+C0	A0002_S005_0_G0004.wav	G0004	Health and Medical Treatment
+C0	A0002_S006_0_G0003.wav	G0003	Digital Products
+C0	A0002_S006_0_G0004.wav	G0004	Digital Products

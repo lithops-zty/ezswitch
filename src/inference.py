@@ -2,6 +2,7 @@ import argparse
 import json
 import pandas as pd
 import pickle
+import pprint
 
 import torch
 import transformers
@@ -28,6 +29,7 @@ def init():
     
     eot_token = {
         "meta-llama/Meta-Llama-3-8B-Instruct": "<|eot_id|>",
+        "meta-llama/Llama-3.2-1B-Instruct": "<|eot_id|>",
         "CohereForAI/aya-23-8B": "<|END_OF_TURN_TOKEN|>",
         "meta-llama/Meta-Llama-3.1-8B-Instruct": "<|eot_id|>",
         "bigscience/bloomz-7b1": None,
@@ -177,6 +179,7 @@ def create_data_leak(src, tgt, human_reference, lang1, lang2):
     return src_prompts, tgt_prompts
     
 def get_outputs(input_list, pipeline, terminators):
+    print(f"Generating... input_list={pprint.pprint(input_list)}")
     result = []
     outputs_list = pipeline(
         input_list,
@@ -198,27 +201,35 @@ def main(args):
         'ml': 'Malayalam',
         'ta': 'Tamil',
         'id': 'Indonesian',
+        'zh': 'Chinese',
+        'sge': 'Singapore English',
     }
     example_dict = {
         'en': 'The reward of goodness shall be nothing but goodness',
         'hi': 'अच्छाई का पुरस्कार अच्छाई के अलावा कुछ नहीं होग',
         'ml': 'നന്മയുടെ പ്രതിഫലം നന്മയല്ലാതെ മറ്റൊന്നുമല്ലा',
         'ta': 'நன்மையின் வெகுமதி நன்மையைத் தவிர வேறில்லை',
-        'id': 'Pahala kebaikan tak lain hanyalah kebaikan'
+        'id': 'Pahala kebaikan tak lain hanyalah kebaikan',
+        'zh': '善的回报只能是善',
+        'sge': 'The reward for doing good is nothing but more good',
     }
     example_cs_dict = {
         'en': 'The reward of goodness shall be nothing but goodness',
         'hi': 'goodness ka reward keval goodness hee hoga.',
         'ml': 'goodnessinte reward mattoru goodness mathramayirikkum',
         'ta': 'The reward of goodness yadharthamaana nalladhu dhaan irukkum.',
-        'id': 'The reward dari kebaikan shall be nothing but kebaikan.'
+        'id': 'The reward dari kebaikan shall be nothing but kebaikan.',
+        'zh': '善的回报shall be nothing but善',
+        'sge': 'The reward for doing good is nothing but more good',
     }
     example_words_dict = {
         'en': ['reward'],
         'hi': ['होगा'],
         'ml': ['മറ്റൊ'],
         'ta': ['நல்லது'],
-        'id': ['kebaikan']
+        'id': ['kebaikan'],
+        'zh': ['只能是'],
+        'sge': ['reward'],
     }
     
     lang1 = args.lang1
