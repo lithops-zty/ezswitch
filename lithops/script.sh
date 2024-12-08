@@ -19,12 +19,12 @@ python alignment/giza-py/giza.py \
     --target lithops/singlish_data/train.translated.tokenized.zh \
     --alignments lithops/singlish_data/train.sge-translated-zh.align
 
-echo -e "\033[1;38;5;22mStage 1: CSW Generation\033[0m"
+echo -e "\033[1;38;5;22mStage 3: CSW Generation\033[0m"
 python src/inference.py \
     --lang1 sge \
     --lang2 zh \
     --src lithops/singlish_data/train.sge \
     --tgt_translated lithops/singlish_data/train.translated.tokenized.zh \
     --silver_src_align lithops/singlish_data/train.sge-translated-zh.align \
-    --model_id "meta-llama/Meta-Llama-3-8B-Instruct" \
+    --model_id "meta-llama/Llama-3.2-1B-Instruct" \
     --output lithops/singlish_data/output/full_llama3_2.csv
