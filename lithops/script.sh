@@ -26,5 +26,5 @@ python src/inference.py \
     --src lithops/singlish_data/train.sge \
     --tgt_translated lithops/singlish_data/train.translated.tokenized.zh \
     --silver_src_align lithops/singlish_data/train.sge-translated-zh.align \
-    --model_id "meta-llama/Llama-3.2-1B-Instruct" \
+    --model_id "meta-llama/Meta-Llama-3-8B-Instruct" \
     --output lithops/singlish_data/output/full_llama3_2.csv
