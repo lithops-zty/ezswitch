@@ -25,7 +25,7 @@ class Translator:
             'ml': 'Malayalam',
             'id': 'Indonesian',
             'zh': 'Chinese',
-            'sge': 'Singapore English',
+            'sge': 'Singlish',
         }
         self.EXAMPLEMAP = {
             'en': 'The reward of goodness shall be nothing but goodness',
