@@ -21,12 +21,13 @@ EZSwitch Usage
 ```shell
 python src/translate.py <options>
 ```
-| Options    | Description          | Default | Required |
-|------------|----------------------|---------|----------|
-| `--src`    | Source language Code | N/A     | ?        |
-| `--tgt`    | Target language Code | N/A     | ?        |
-| `--input`  | Path to input file   | N/A     | ?        |
-| `--output` | Path to output file  | N/A     | ?        |
+| Options      | Description          | Default                             | Required |
+|--------------|----------------------|-------------------------------------|----------|
+| `--src`      | Source language Code | N/A                                 | ?        |
+| `--tgt`      | Target language Code | N/A                                 | ?        |
+| `--input`    | Path to input file   | N/A                                 | ?        |
+| `--output`   | Path to output file  | N/A                                 | ?        |
+| `--model_id` | ID of model to use   | meta-llama/Meta-Llama-3-8B-Instruct | No       |
 
 | File       | Description                                                   | format                         | I/O   |
 |------------|---------------------------------------------------------------|--------------------------------|-------|
