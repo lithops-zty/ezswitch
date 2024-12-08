@@ -38,10 +38,9 @@ class Translator:
         }
         # self.timeout = timeout
         self.model = pipeline('text-generation', 
-            'meta-llama/Llama-3.2-1B-Instruct',
+            'meta-llama/Meta-Llama-3-8B-Instruct',
             model_kwargs={"torch_dtype": torch.bfloat16},
             device_map="auto",
-            max_length=1000,
         )
         
     def transform(self, list_of_sentences):
@@ -60,10 +59,7 @@ class Translator:
         output = self.model(chat_template)
         clean_output = []
         for i in range(len(output)):
-            print(output[i][0]['generated_text'], list_of_sentences)
-            clean_output.append(
-                output[i][0]['generated_text'][-1]['content'].replace("\n", " ")
-            )#.split('\n')[0])
+            clean_output.append(output[i][0]['generated_text'][len(list_of_sentences[i]):].split('\n')[0])
         return clean_output
 
 def main(args):

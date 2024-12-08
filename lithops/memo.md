@@ -21,12 +21,12 @@ EZSwitch Usage
 ```shell
 python src/translate.py <options>
 ```
-| Options  | Description          | Default | Required |
-|----------|----------------------|---------|----------|
-| --src    | Source language Code | N/A     | ?        |
-| --tgt    | Target language Code | N/A     | ?        |
-| --input  | Path to input file   | N/A     | ?        |
-| --output | Path to output file  | N/A     | ?        |
+| Options    | Description          | Default | Required |
+|------------|----------------------|---------|----------|
+| `--src`    | Source language Code | N/A     | ?        |
+| `--tgt`    | Target language Code | N/A     | ?        |
+| `--input`  | Path to input file   | N/A     | ?        |
+| `--output` | Path to output file  | N/A     | ?        |
 
 | File       | Description                                                   | format                         | I/O   |
 |------------|---------------------------------------------------------------|--------------------------------|-------|
@@ -53,11 +53,11 @@ python src/translate.py --src hi --tgt en --input data/hinge/valid.hi --output d
 python alignment/giza-py/giza.py <options>
 ```
 
-| Options      | Description                               | Default | Required |
-|--------------|-------------------------------------------|---------|----------|
-| --source     | Path to source language file              | N/A    | ?     |
-| --target     | Path to target language file              | N/A    | ?     |
-| --alignments | Path to output file containing alignments | N/A    | ?     |
+| Options        | Description                               | Default | Required |
+|----------------|-------------------------------------------|---------|----------|
+| `--source`     | Path to source language file              | N/A     | ?        |
+| `--target`     | Path to target language file              | N/A     | ?        |
+| `--alignments` | Path to output file containing alignments | N/A     | ?        |
 
 | File           | Description                                                    | format                          | I/O   |
 |----------------|----------------------------------------------------------------|---------------------------------|-------|
