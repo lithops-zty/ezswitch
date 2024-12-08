@@ -202,7 +202,7 @@ def main(args):
         'ta': 'Tamil',
         'id': 'Indonesian',
         'zh': 'Chinese',
-        'sge': 'Singapore English',
+        'sge': 'Singlish',
     }
     example_dict = {
         'en': 'The reward of goodness shall be nothing but goodness',
