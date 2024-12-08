@@ -59,7 +59,10 @@ class Translator:
         output = self.model(chat_template)
         clean_output = []
         for i in range(len(output)):
-            clean_output.append(output[i][0]['generated_text'][len(list_of_sentences[i]):].split('\n')[0])
+            print(output[i][0]['generated_text'], list_of_sentences)
+            clean_output.append(
+                output[i][0]['generated_text'][-1]['content'].replace("\n", " ")
+            )  # .split('\n')[0])
         return clean_output
 
 def main(args):
