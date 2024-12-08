@@ -10,14 +10,16 @@ def init():
     arg_parser.add_argument('--tgt_lang', type=str)
     arg_parser.add_argument('--input', type=str)
     arg_parser.add_argument('--output', type=str)
+    arg_parser.add_argument('--model_id', type=str, default='meta-llama/Meta-Llama-3-8B-Instruct')
     
     args = arg_parser.parse_args()
     return args
 
 class Translator:
-    def __init__(self, source_language, target_language):
+    def __init__(self, source_language, target_language, model_id):
         self.source_language = source_language
         self.target_language = target_language
+        self.model_id = model_id
         self.LANGMAP = {
             'en': 'English',
             'hi': 'Hindi',
@@ -38,7 +40,7 @@ class Translator:
         }
         # self.timeout = timeout
         self.model = pipeline('text-generation', 
-            'meta-llama/Meta-Llama-3-8B-Instruct',
+            self.model_id,
             model_kwargs={"torch_dtype": torch.bfloat16},
             device_map="auto",
         )
@@ -69,6 +71,7 @@ def main(args):
     translator = Translator(
         source_language=args.src_lang,
         target_language=args.tgt_lang,
+        model_id=args.model_id
     )
     
     print(f"reading input file {args.input}")
