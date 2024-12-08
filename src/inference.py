@@ -30,6 +30,7 @@ def init():
     eot_token = {
         "meta-llama/Meta-Llama-3-8B-Instruct": "<|eot_id|>",
         "meta-llama/Llama-3.2-1B-Instruct": "<|eot_id|>",
+        "aisingapore/llama3-8b-cpt-sea-lionv2.1-instruct": "<|eot_id|>",
         "CohereForAI/aya-23-8B": "<|END_OF_TURN_TOKEN|>",
         "meta-llama/Meta-Llama-3.1-8B-Instruct": "<|eot_id|>",
         "bigscience/bloomz-7b1": None,

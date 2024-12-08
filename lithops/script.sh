@@ -5,6 +5,7 @@ python src/translate.py \
     --tgt zh \
     --input lithops/singlish_data/train.sge \
     --output lithops/singlish_data/train.translated.zh
+    --model_id aisingapore/llama3-8b-cpt-sea-lionv2.1-instruct
 
 echo -e "\033[1;38;5;22mStage 1.1: Chinese Tokenization\033[0m"
 # Tokenize Chinese with jieba
@@ -26,5 +27,5 @@ python src/inference.py \
     --src lithops/singlish_data/train.sge \
     --tgt_translated lithops/singlish_data/train.translated.tokenized.zh \
     --silver_src_align lithops/singlish_data/train.sge-translated-zh.align \
-    --model_id "meta-llama/Llama-3.2-1B-Instruct" \
+    --model_id "aisingapore/llama3-8b-cpt-sea-lionv2.1-instruct" \
     --output lithops/singlish_data/output/full_llama3_2.csv
