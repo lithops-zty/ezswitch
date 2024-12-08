@@ -46,7 +46,7 @@ class Translator:
     def transform(self, list_of_sentences):
         list_of_chat = [   
             [
-                {"role": "system", "content": f"Translate the following to {self.LANGMAP[self.target_language]}: "},
+                {"role": "system", "content": f"Translate the following to {self.LANGMAP[self.target_language]}. DO NOT give any additional comments. "},
                 {"role": "user", "content": self.EXAMPLEMAP[self.source_language] },
                 {"role": "assistant", "content": self.EXAMPLEMAP[self.target_language] },
                 {"role": "user", "content": l.strip() }
