@@ -35,6 +35,8 @@ def init():
         "meta-llama/Meta-Llama-3.1-8B-Instruct": "<|eot_id|>",
         "bigscience/bloomz-7b1": None,
         "bigscience/mt0-xxl": None,
+        "aisingapore/sea-lion-7b-instruct": None,
+        "SeaLLMs/SeaLLMs-v3-7B-Chat": None,
     }
     args = arg_parser.parse_args()
     args.eot_token = eot_token[args.model_id]
