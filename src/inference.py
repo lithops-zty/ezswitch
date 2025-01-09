@@ -37,6 +37,7 @@ def init():
         "bigscience/mt0-xxl": None,
         "aisingapore/sea-lion-7b-instruct": None,
         "SeaLLMs/SeaLLMs-v3-7B-Chat": None,
+        "SeaLLMs/SeaLLM-7B-v2.5": None
     }
     args = arg_parser.parse_args()
     args.eot_token = eot_token[args.model_id]
@@ -222,7 +223,7 @@ def main(args):
         'ml': 'goodnessinte reward mattoru goodness mathramayirikkum',
         'ta': 'The reward of goodness yadharthamaana nalladhu dhaan irukkum.',
         'id': 'The reward dari kebaikan shall be nothing but kebaikan.',
-        'zh': '善的回报shall be nothing but善',
+        'zh': 'The reward of goodness zhineng shi goodness',
         'sge': 'The reward for doing good is nothing but more good',
     }
     example_words_dict = {

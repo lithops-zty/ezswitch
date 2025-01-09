@@ -48,7 +48,7 @@ class GPTEvaluator:
     def __init__(self, openai_key, openai_org):
         self.openai_key = openai_key
         self.openai_org = openai_org
-        self.openai = openai.OpenAI(self.openai_key, self.openai_org)
+        self.openai = openai.OpenAI(api_key=self.openai_key, organization=self.openai_org)
         example_input_1 = """{
             "original_l1": "Enjoy 0% instalment for up to 12 months when ordering an Air Asia plane ticket with BNI Credit Card!",
             "original_l2": "Nikmati cicilan 0% hingga 12 bulan untuk pemesanan tiket pesawat Air Asia dengan kartu kredit BNI!",
@@ -99,7 +99,7 @@ class GPTEvaluator:
         for custom_id, mes in enumerate(input_list):
             batch_format.append(
                 {
-                    "custom_id": custom_id,
+                    "custom_id": str(custom_id),
                     "method": "POST",
                     "url": "/v1/chat/completions", 
                     "body": {
@@ -113,7 +113,7 @@ class GPTEvaluator:
     
     def post_process(self, output):
         json_output = []
-        for i in range(0, output):
+        for i in range(0, len(output)):
             json_output.append(json.loads(output[i]))
         return json_output
 
@@ -126,9 +126,9 @@ class GPTEvaluator:
                 messages=chat,
                 max_tokens=20
             )
-            output.append(response.choices[0].message)
-        self.post_process(output)
-        return output
+            output.append(response.choices[0].message.content)
+        json_output = self.post_process(output)
+        return json_output
     
     def evaluate_batch(self, list_of_sentences):
         list_of_chat = self.transform(list_of_sentences)
@@ -154,7 +154,7 @@ class GPTEvaluator:
     
 def init():
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument('--generation_file', type=str)
+    arg_parser.add_argument('--input_file', type=str)
     arg_parser.add_argument('--lang', type=str)
     arg_parser.add_argument('--output_file', type=str)
     
