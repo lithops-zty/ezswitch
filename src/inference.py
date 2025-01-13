@@ -37,6 +37,7 @@ def init():
         "bigscience/mt0-xxl": None,
         "aisingapore/sea-lion-7b-instruct": None,
         "SeaLLMs/SeaLLMs-v3-7B-Chat": None,
+        "SeaLLMs/SeaLLMs-v3-7B": None,
         "SeaLLMs/SeaLLM-7B-v2.5": None
     }
     args = arg_parser.parse_args()
@@ -48,12 +49,12 @@ def init():
 def create_baseline(src, tgt, lang1, lang2, example_l1, example_l2, example_cs, example_words_l1, example_words_l2):
     SYSTEM_SRC_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang1} sentence "
-                         f"into a code mixed sentence with romanized {lang2} "
+                         f"into a code mixed sentence with {lang2} "
                          f"and {lang1}"
                         )
     SYSTEM_TGT_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang2} sentence "
-                         f"into a code mixed sentence with romanized {lang2} "
+                         f"into a code mixed sentence with {lang2} "
                          f"and {lang1}"
                         )
     src_prompts = []
@@ -95,12 +96,12 @@ def get_valid_switching_point(alignment_pairs):
 def create_alignment(src, tgt, alignment, lang1, lang2, example_l1, example_l2, example_cs, example_words_l1, example_words_l2):
     SYSTEM_SRC_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang1} sentence "
-                         f"into a code mixed sentence with romanized {lang2} "
+                         f"into a code mixed sentence with {lang2} "
                          f"and {lang1} with specific key words that we want to appear"
                         )
     SYSTEM_TGT_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang2} sentence "
-                         f"into a code mixed sentence with romanized {lang2} "
+                         f"into a code mixed sentence with {lang2} "
                          f"and {lang1} with specific key words that we want to appear"
                         )
     src_prompts = []
@@ -151,12 +152,12 @@ def get_constraint(en, eval_set):
 def create_data_leak(src, tgt, human_reference, lang1, lang2):
     SYSTEM_SRC_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang1} sentence "
-                         f"into a code mixed sentence with romanized {lang2} "
+                         f"into a code mixed sentence with {lang2} "
                          f"and {lang1} with specific key words that we want to appear"
                         )
     SYSTEM_TGT_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang2} sentence "
-                         f"into a code mixed sentence with romanized {lang2} "
+                         f"into a code mixed sentence with {lang2} "
                          f"and {lang1} with specific key words that we want to appear"
                         )
     src_prompts = []
@@ -223,7 +224,7 @@ def main(args):
         'ml': 'goodnessinte reward mattoru goodness mathramayirikkum',
         'ta': 'The reward of goodness yadharthamaana nalladhu dhaan irukkum.',
         'id': 'The reward dari kebaikan shall be nothing but kebaikan.',
-        'zh': 'The reward of goodness zhineng shi goodness',
+        'zh': 'The reward of goodness 只能是 goodness',
         'sge': 'The reward for doing good is nothing but more good',
     }
     example_words_dict = {

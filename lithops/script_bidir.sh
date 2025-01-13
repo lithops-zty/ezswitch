@@ -1,9 +1,10 @@
 STAGE_1=0
 STAGE_1_1=0
 STAGE_2=0
-STAGE_3=0
+STAGE_3=1
+STAGE_3_1=0
 STAGE_4=0
-STAGE_5=1
+STAGE_5=0
 
 DATA_DIR=lithops/singlish_data
 
@@ -73,14 +74,23 @@ if [ "$STAGE_3" -eq 1 ]; then
         --gold_align $DATA_DIR/train.sge-zh.align \
         --silver_src_align $DATA_DIR/train.sge-translated-zh.align \
         --silver_tgt_align $DATA_DIR/train.translated-sge-zh.align \
-        --model_id "SeaLLMs/SeaLLM-7B-v2.5" \
-        --output $DATA_DIR/output/full_SeaLLMs_SeaLLM-7B-v2.5.csv
-        # --model_id "SeaLLMs/SeaLLMs-v3-7B-Chat" \
-        # --output $DATA_DIR/output/full_SeaLLMs_SeaLLMs-v3-7B-Chat.csv
+        --model_id "SeaLLMs/SeaLLMs-v3-7B" \
+        --output $DATA_DIR/output/full_SeaLLMs_SeaLLMs-v3-7B-non-romanized.csv
+        # --model_id "SeaLLMs/SeaLLM-7B-v2.5" \
+        # --output $DATA_DIR/output/full_SeaLLMs_SeaLLM-7B-v2.5.csv
         # --model_id "aisingapore/llama3-8b-cpt-sea-lionv2.1-instruct" \
         # --output $DATA_DIR/output/full_sea-lionv2-1.csv
         # --model_id "aisingapore/sea-lion-7b-instruct" \
         # --output $DATA_DIR/output/full_aisingapore_sea-lion-7b-instruct.csv
+fi
+
+# Stage 3.1: Romanize Chinese
+if [ "$STAGE_3_1" -eq 1 ]; then
+    echo -e "\033[1;38;5;22mStage 3.1: Romanize Chinese\033[0m"
+    python src/romanize_zh.py \
+    --input $DATA_DIR/output/full_SeaLLMs_SeaLLMs-v3-7B.csv \
+    --output $DATA_DIR/output/full_SeaLLMs_SeaLLMs-v3-7B_tmp.csv \
+    --exclude_cols src tgt src_translated tgt_translated
 fi
 
 # Stage 4: Compile Output

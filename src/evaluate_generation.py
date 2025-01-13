@@ -1,6 +1,7 @@
 import argparse
 import pandas as pd
 import numpy as np
+import time
 
 import evaluate
 
@@ -114,7 +115,11 @@ class GPTEvaluator:
     def post_process(self, output):
         json_output = []
         for i in range(0, len(output)):
-            json_output.append(json.loads(output[i]))
+            try:
+                json_output.append(json.loads(output[i]))
+            except:
+                print(f"error in decoding GPT output: {output[i]}")
+                json_output.append('{"accuracy": 0, "fluency": 0}')
         return json_output
 
     def evaluate(self, list_of_sentences):
@@ -150,7 +155,24 @@ class GPTEvaluator:
             }
         )
 
-        return response
+        # wait for completion
+        while True:
+            print('waiting for batch job completion...')
+            response = openai.batches.retrieve(response.id)
+            if response.status == 'completed':
+                print('batch job completed!')
+                output_file_content = openai.files.content(response.output_file_id).content.decode('utf-8')
+                output = [None] * response.request_counts.total
+                for line in output_file_content.split('\n'):
+                    if not line:
+                        continue
+                    completion = json.loads(line)
+                    output[int(completion['custom_id'])] = completion['response']['body']['choices'][0]['message']['content']
+                break
+            time.sleep(3)
+            
+        json_output = self.post_process(output)
+        return json_output
     
 def init():
     arg_parser = argparse.ArgumentParser()
@@ -186,13 +208,13 @@ def main(args):
 
     if args.batch:
         print("Submitting batch evaluation request...")
-        response = evaluator.evaluate_batch(df)
-        print(response)
+        output = evaluator.evaluate_batch(df)
     else:
         print("Evaluating one by one...")
         output = evaluator.evaluate(df)
-        df['GPT_a'] = [o['accuracy'] for o in output]
-        df['GPT_f'] = [o['fluency'] for o in output]
+
+    df['GPT_a'] = [o['accuracy'] for o in output]
+    df['GPT_f'] = [o['fluency'] for o in output]
 
     df.to_csv(args.output_file, index=False)
     print(f"Output saved to {args.output_file}")
