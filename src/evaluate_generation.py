@@ -119,7 +119,7 @@ class GPTEvaluator:
                 json_output.append(json.loads(output[i]))
             except:
                 print(f"error in decoding GPT output: {output[i]}")
-                json_output.append('{"accuracy": 0, "fluency": 0}')
+                json_output.append({"accuracy": 0, "fluency": 0})
         return json_output
 
     def evaluate(self, list_of_sentences):
