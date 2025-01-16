@@ -4,6 +4,7 @@ import pandas as pd
 import pickle
 import pprint
 
+import openai
 import torch
 import transformers
 
@@ -41,7 +42,7 @@ def init():
         "SeaLLMs/SeaLLM-7B-v2.5": None
     }
     args = arg_parser.parse_args()
-    args.eot_token = eot_token[args.model_id]
+    args.eot_token = eot_token.get(args.model_id, None)
     
     return args
 
@@ -182,11 +183,60 @@ def create_data_leak(src, tgt, human_reference, lang1, lang2):
             ]
         )
     return src_prompts, tgt_prompts
-    
+
+class GPTPipeline:
+    def __init__(self, model_id):
+        self.model_id = model_id
+
+    def __call__(self, input_list, max_new_tokens, eos_token_id, do_sample, temperature, top_p):
+        
+        def work(i):
+            print(f'work #{i} done')
+            return openai.chat.completions.create(
+                model=self.model_id,
+                messages=input_list[i],
+                max_tokens=max_new_tokens,
+                temperature=temperature,
+                top_p=top_p,
+            ).choices[0].message.content
+            
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=12) as executor:
+            responses = list(executor.map(work, range(len(input_list))))
+
+        # responses = []
+        # import tqdm
+        # for input_prompt in tqdm.tqdm(input_list):
+        #     response = openai.chat.completions.create(
+        #         model=self.model_id,
+        #         messages=input_prompt,
+        #         max_tokens=max_new_tokens,
+        #         temperature=temperature,
+        #         top_p=top_p,
+        #     )
+        #     responses.append(response.choices[0].message.content)
+        return responses
+
+
+class HFPipeline:
+    def __init__(self, model_id):
+        self.pipeline = transformers.pipeline(
+            "text-generation",
+            model=model_id,
+            model_kwargs={"torch_dtype": torch.bfloat16},
+            device_map="auto",
+        )
+
+    def __call__(self, *args, **kwargs):
+        outputs_list = self.pipeline(*args, **kwargs)
+        for i, outputs in enumerate(outputs_list):
+            result.append(outputs[0]["generated_text"][-1]['content'])
+        return result
+
 def get_outputs(input_list, pipeline, terminators):
+    assert isinstance(pipeline, (GPTPipeline, HFPipeline))
     print(f"Generating... input_list={pprint.pprint(input_list)}")
-    result = []
-    outputs_list = pipeline(
+    result = pipeline(
         input_list,
         max_new_tokens=256,
         eos_token_id=terminators,
@@ -194,9 +244,14 @@ def get_outputs(input_list, pipeline, terminators):
         temperature=0.6,
         top_p=0.9,
     )
-    for i, outputs in enumerate(outputs_list):
-        result.append(outputs[0]["generated_text"][-1]['content'])
     return result
+
+def get_pipeline(model_id, use_openai=False):
+    if use_openai:
+        return GPTPipeline(model_id=model_id)
+    else:
+        return HFPipeline(model_id=model_id)
+
 
 def main(args):
     
@@ -249,20 +304,22 @@ def main(args):
     
     model_id = args.model_id
 
-    pipeline = transformers.pipeline(
-        "text-generation",
-        model=model_id,
-        model_kwargs={"torch_dtype": torch.bfloat16},
-        device_map="auto",
+    use_openai = "gpt" in args.model_id.lower()  # Simple heuristic for now
+    pipeline = get_pipeline(
+        model_id=model_id,
+        use_openai=use_openai,
     )
 
-    terminators = [
-        pipeline.tokenizer.eos_token_id,
-    ]
-    if args.eot_token:
-        terminators.append(
-            pipeline.tokenizer.convert_tokens_to_ids(args.eot_token) 
-        )
+    try:
+        terminators = [
+            pipeline.tokenizer.eos_token_id,
+        ]
+        if args.eot_token:
+            terminators.append(
+                pipeline.tokenizer.convert_tokens_to_ids(args.eot_token) 
+            )
+    except (KeyError, AttributeError):
+        terminators = []
     
     if args.src != '':
         src = read_file(args.src)
@@ -367,6 +424,15 @@ def main(args):
         data['baseline_src'] = baseline_src
     else:
         baseline_src = None
+
+    def get_structure(obj):
+        if isinstance(obj, dict):
+            return {f'{k}: {get_structure(v)}' for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [get_structure(v) for v in obj]
+        else:
+            return type(obj).__name__
+    print(get_structure(data))
     pd.DataFrame(data).to_csv(args.output, index=False)
         
     if baseline_input_tgt:
@@ -420,7 +486,7 @@ def main(args):
         data['gt_tgt'] = gt_tgt
     else:
         gt_tgt = None
-        
+
     pd.DataFrame(data).to_csv(args.output, index=False)
     
     
