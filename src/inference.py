@@ -235,7 +235,7 @@ class HFPipeline:
 
 def get_outputs(input_list, pipeline, terminators):
     assert isinstance(pipeline, (GPTPipeline, HFPipeline))
-    print(f"Generating... input_list={pprint.pprint(input_list)}")
+    print(f"Generating...")
     result = pipeline(
         input_list,
         max_new_tokens=256,

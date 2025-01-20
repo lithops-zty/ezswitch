@@ -159,7 +159,11 @@ class GPTEvaluator:
         while True:
             print('waiting for batch job completion...')
             response = openai.batches.retrieve(response.id)
-            if response.status == 'completed':
+            if response.status in ('cancelled', 'failed'):
+                print('batch job cancelled or failed')
+                exit(1)
+                
+            if response.status in ('expired', 'completed'):
                 print('batch job completed!')
                 output_file_content = openai.files.content(response.output_file_id).content.decode('utf-8')
                 output = [None] * response.request_counts.total
