@@ -51,12 +51,14 @@ def create_baseline(src, tgt, lang1, lang2, example_l1, example_l2, example_cs, 
     SYSTEM_SRC_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang1} sentence "
                          f"into a code mixed sentence with {lang2} "
-                         f"and {lang1}"
+                         f"and {lang1}."
+                         f"Do not output any other irrelavent information"
                         )
     SYSTEM_TGT_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang2} sentence "
                          f"into a code mixed sentence with {lang2} "
-                         f"and {lang1}"
+                         f"and {lang1}."
+                         f"Do not output any other irrelavent information"
                         )
     src_prompts = []
     tgt_prompts = []
@@ -98,12 +100,14 @@ def create_alignment(src, tgt, alignment, lang1, lang2, example_l1, example_l2, 
     SYSTEM_SRC_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang1} sentence "
                          f"into a code mixed sentence with {lang2} "
-                         f"and {lang1} with specific key words that we want to appear"
+                         f"and {lang1} with specific key words that we want to appear."
+                         f"Do not output any other irrelavent information"
                         )
     SYSTEM_TGT_PROMPT = (f"You are a Bilingual {lang1} {lang2} speaker, "
                          f"you will help translate these {lang2} sentence "
                          f"into a code mixed sentence with {lang2} "
-                         f"and {lang1} with specific key words that we want to appear"
+                         f"and {lang1} with specific key words that we want to appear."
+                         f"Do not output any other irrelavent information"
                         )
     src_prompts = []
     tgt_prompts = []
@@ -229,6 +233,7 @@ class HFPipeline:
 
     def __call__(self, *args, **kwargs):
         outputs_list = self.pipeline(*args, **kwargs)
+        result = []
         for i, outputs in enumerate(outputs_list):
             result.append(outputs[0]["generated_text"][-1]['content'])
         return result
@@ -312,11 +317,11 @@ def main(args):
 
     try:
         terminators = [
-            pipeline.tokenizer.eos_token_id,
+            pipeline.pipeline.tokenizer.eos_token_id,
         ]
         if args.eot_token:
             terminators.append(
-                pipeline.tokenizer.convert_tokens_to_ids(args.eot_token) 
+                pipeline.pipeline.tokenizer.convert_tokens_to_ids(args.eot_token) 
             )
     except (KeyError, AttributeError):
         terminators = []

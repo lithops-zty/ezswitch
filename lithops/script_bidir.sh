@@ -1,14 +1,14 @@
-STAGE_1=0
-STAGE_1_1=0
-STAGE_2=0
+STAGE_1=1
+STAGE_1_1=1
+STAGE_2=1
 STAGE_3=1
-STAGE_3_1=0
-STAGE_4=0
-STAGE_5=0
+STAGE_3_1=1
+STAGE_4=1
+STAGE_5=1
 
-DATA_DIR=lithops/singlish_data
+DATA_DIR=lithops/singlish_data/
 
-# Stage 1: TRanslation
+# Stage 1: Translation
 if [ "$STAGE_1" -eq 1 ]; then
     echo -e "\033[1;38;5;22mStage 1: Translation\033[0m"
     # SgE to Chinese
@@ -61,36 +61,42 @@ if [ "$STAGE_2" -eq 1 ]; then
         --alignments $DATA_DIR/train.translated-sge-zh.align
 fi
 
+MODEL_IDS=("meta-llama/Meta-Llama-3-8B-Instruct" "gpt-4o-mini")
 # Stage 3: CSW Generation
 if [ "$STAGE_3" -eq 1 ]; then
-    echo -e "\033[1;38;5;22mStage 3: CSW Generation\033[0m"
-    python src/inference.py \
-        --lang1 sge \
-        --lang2 zh \
-        --src $DATA_DIR/train.sge \
-        --tgt $DATA_DIR/train.tokenized.zh \
-        --src_translated $DATA_DIR/train.translated.sge \
-        --tgt_translated $DATA_DIR/train.translated.tokenized.zh \
-        --gold_align $DATA_DIR/train.sge-zh.align \
-        --silver_src_align $DATA_DIR/train.sge-translated-zh.align \
-        --silver_tgt_align $DATA_DIR/train.translated-sge-zh.align \
-        --model_id "SeaLLMs/SeaLLMs-v3-7B" \
-        --output $DATA_DIR/output/full_SeaLLMs_SeaLLMs-v3-7B-non-romanized.csv
-        # --model_id "SeaLLMs/SeaLLM-7B-v2.5" \
-        # --output $DATA_DIR/output/full_SeaLLMs_SeaLLM-7B-v2.5.csv
-        # --model_id "aisingapore/llama3-8b-cpt-sea-lionv2.1-instruct" \
-        # --output $DATA_DIR/output/full_sea-lionv2-1.csv
-        # --model_id "aisingapore/sea-lion-7b-instruct" \
-        # --output $DATA_DIR/output/full_aisingapore_sea-lion-7b-instruct.csv
-fi
+    for MODEL_ID in "${MODEL_IDS[@]}"; do
+        OUTPUT_FILE=$DATA_DIR/output/full_${MODEL_ID//\//_}.csv
+        echo -e "\033[1;38;5;22mStage 3: CSW Generation using $MODEL_ID\033[0m"
+        python src/inference.py \
+            --lang1 sge \
+            --lang2 zh \
+            --src $DATA_DIR/train.sge \
+            --tgt $DATA_DIR/train.tokenized.zh \
+            --src_translated $DATA_DIR/train.translated.sge \
+            --tgt_translated $DATA_DIR/train.translated.tokenized.zh \
+            --gold_align $DATA_DIR/train.sge-zh.align \
+            --silver_src_align $DATA_DIR/train.sge-translated-zh.align \
+            --silver_tgt_align $DATA_DIR/train.translated-sge-zh.align \
+            --model_id $MODEL_ID \
+            --output $OUTPUT_FILE
+            # --model_id "SeaLLMs/SeaLLMs-v3-7B" \
+            # --output $DATA_DIR/output/full_SeaLLMs_SeaLLMs-v3-7B.csv
+            # --model_id "SeaLLMs/SeaLLM-7B-v2.5" \
+            # --output $DATA_DIR/output/full_SeaLLMs_SeaLLM-7B-v2.5.csv
+            # --model_id "aisingapore/llama3-8b-cpt-sea-lionv2.1-instruct" \
+            # --output $DATA_DIR/output/full_sea-lionv2-1.csv
+            # --model_id "aisingapore/sea-lion-7b-instruct" \
+            # --output $DATA_DIR/output/full_aisingapore_sea-lion-7b-instruct.csv
 
-# Stage 3.1: Romanize Chinese
-if [ "$STAGE_3_1" -eq 1 ]; then
-    echo -e "\033[1;38;5;22mStage 3.1: Romanize Chinese\033[0m"
-    python src/romanize_zh.py \
-    --input $DATA_DIR/output/full_SeaLLMs_SeaLLMs-v3-7B.csv \
-    --output $DATA_DIR/output/full_SeaLLMs_SeaLLMs-v3-7B_tmp.csv \
-    --exclude_cols src tgt src_translated tgt_translated
+        # Stage 3.1: Romanize Chinese
+        if [ "$STAGE_3_1" -eq 1 ]; then
+            echo -e "\033[1;38;5;22mStage 3.1: Romanize Chinese\033[0m"
+            python src/romanize_zh.py \
+                --input $OUTPUT_FILE \
+                --output "$OUTPUT_FILE-romanized" \
+                --exclude_cols src tgt src_translated tgt_translated
+        fi
+    done
 fi
 
 # Stage 4: Compile Output
